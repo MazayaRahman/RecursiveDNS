@@ -14,13 +14,22 @@ def client(host, port):
 
     port = int(port)
 # Define the port on which you want to connect to the server
-    sa_sameas_myaddr =mysoc.gethostbyname(host)
+    #sa_sameas_myaddr =mysoc.gethostbyname(host)
 # connect to the server on local machine
-    server_binding=(sa_sameas_myaddr,port)
-    cs.connect(server_binding)
-
-    
-    cs.close()
+    #server_binding=(sa_sameas_myaddr,port)
+    #cs.connect(server_binding)
+    for hn in hostname:
+       #print("the hostname is:" ,hn)
+       sa_sameas_myaddr = mysoc.gethostbyname(host)
+       server_binding = (sa_sameas_myaddr, port)
+       cs.connect(server_binding)
+       cs.send(hn.encode('utf-8'))
+       data_from_rs = cs.recv(100) #data received from rs server.
+       print(data_from_rs)
+       status = data_from_rs.split(' ')
+       print(status[2])
+       break
+       cs.close()
 
     exit()
 
@@ -29,6 +38,14 @@ print 'Argument List:', str(sys.argv)
 host = sys.argv[1]
 port = sys.argv[2]
 print 'host: ', host, 'port: ', port
+hostname =[]
+with open("PROJI-HNS.txt", 'r') as f:
+    for lines in f:
+        #print(lines)
+        hostname.append(lines.strip())
+#print("The first hostname is:",hostname[0])
+#print("The second hostname is:", hostname[1])
+
 t2 = threading.Thread(name='client', target=client, args=(host,port,))
 t2.start()
 t2.join()
