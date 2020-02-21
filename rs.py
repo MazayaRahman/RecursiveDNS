@@ -19,7 +19,7 @@ def lookup(target):
             #print entry
             return entry
 
-
+# server task
 def server(port):
     try:
         ss=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
@@ -32,7 +32,7 @@ def server(port):
     ss.bind(server_binding)
     ss.listen(1)
     host=mysoc.gethostname()
-    #hi
+    
     print("[S]: Server host name is: ",host)
     localhost_ip=(mysoc.gethostbyname(host))
     print("[S]: Server IP address is  ",localhost_ip)
