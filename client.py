@@ -8,9 +8,11 @@ def client(host, port):
 
     try:
         cs=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
+        #cs1 = mysoc.socket(sysoc.AF_INET, mysoc.SOCK_STREAM)
         print("[C]: Client socket created")
     except mysoc.error as err:
         print('{} \n'.format("socket open error ",err))
+        #cs1=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
 
     port = int(port)
 # Define the port on which you want to connect to the server
@@ -19,16 +21,18 @@ def client(host, port):
     #server_binding=(sa_sameas_myaddr,port)
     #cs.connect(server_binding)
     for hn in hostname:
-       #print("the hostname is:" ,hn)
+       print("the hostname is:" ,hn)
        sa_sameas_myaddr = mysoc.gethostbyname(host)
        server_binding = (sa_sameas_myaddr, port)
        cs.connect(server_binding)
        cs.send(hn.encode('utf-8'))
        data_from_rs = cs.recv(100) #data received from rs server.
-       print(data_from_rs)
+       print("the data from rs is:", data_from_rs)
        status = data_from_rs.split(' ')
-       print(status[2])
-       break
+       #print(status[2])
+       if(status[2] == 'A'):
+           print(data_from_rs)
+       #if(status[2] == 'NS'):
        cs.close()
 
     exit()
@@ -43,7 +47,9 @@ with open("PROJI-HNS.txt", 'r') as f:
     for lines in f:
         #print(lines)
         hostname.append(lines.strip())
-#print("The first hostname is:",hostname[0])
+
+    for i in hostname:
+        print("The  hostname is:",hostname[i])
 #print("The second hostname is:", hostname[1])
 
 t2 = threading.Thread(name='client', target=client, args=(host,port,))
