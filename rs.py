@@ -32,21 +32,16 @@ def server(port):
     ss.bind(server_binding)
     ss.listen(1)
     host=mysoc.gethostname()
-    
+
     print("[S]: Server host name is: ",host)
     localhost_ip=(mysoc.gethostbyname(host))
     print("[S]: Server IP address is  ",localhost_ip)
-    """
-    test = "kill.cs.rutgers.com"
-    ans = lookup(test)
-    if not ans:
-        print "ts not found"
-    """
-    # accept client
-    csockid, addr = ss.accept()
-    print ("[S]: Got a connection request from a client at", addr)
-    # Listen for queries from client
+
+    # Listen for connections from client
     while(True):
+        # accept client
+        csockid, addr = ss.accept()
+        print ("[S]: Got a connection request from a client at", addr)
         hostname = csockid.recv(100).decode('utf-8')
         #print hostname
         if not hostname:
