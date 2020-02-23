@@ -36,7 +36,21 @@ def client(host, port):
            print(data_from_rs)
        #if(status[2] == 'NS'):
        cs.close()
-
+       if(status[2] =='NS'):
+           print("here")
+           try:
+               cs1 = mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
+               print("Client socket1 created")
+           except mysoc.error as err:
+               print('{} \n'.format("socket open error ",err))
+           sa_sameas_myaddr1 = mysoc.gethostbyname(host)
+           server_binding1 = (sa_sameas_myaddr1, port)
+           cs1.connect(server_binding1)
+           print("the hn sending is: ", hn)
+           cs1.send(hn[0].encode('utf-8'))
+           data_from_ts = cs1.recv(100)  #data received from ts server
+           print("data from ts is:" , data_from_ts)
+           cs1.close()
     exit()
 
 print 'Number of arguments:', len(sys.argv), 'arguments.'
