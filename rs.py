@@ -46,7 +46,7 @@ def server(port):
         #print hostname
         if not hostname:
             break
-        print("[S]: Data received from client::  ",hostname)
+        print("[S]: Data received from client::  ",hostname.decode('utf-8'))
         #Look in the table
         record = lookup(hostname)
         if not record:
