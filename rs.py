@@ -5,7 +5,8 @@ import threading
 # Looks up the target host in the dns table and returns the entry
 def lookup(target):
     for entry in dns_table:
-        if entry[0] == target:
+        hn = entry[0].lower()
+        if hn == target:
             print "found!"
             print entry
             entry = ' '.join(entry)
@@ -47,6 +48,9 @@ def server(port):
         if not hostname:
             break
         print("[S]: Data received from client::  ",hostname.decode('utf-8'))
+        if(hostname == "END"):
+            ss.close
+            exit()
         #Look in the table
         record = lookup(hostname)
         if not record:

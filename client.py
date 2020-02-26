@@ -8,11 +8,7 @@ def client(host, rsport, tsport):
 
     rsport = int(rsport)
     tsport = int(tsport)
-# Define the port on which you want to connect to the server
-    #sa_sameas_myaddr =mysoc.gethostbyname(host)
-# connect to the server on local machine
-    #server_binding=(sa_sameas_myaddr,port)
-    #cs.connect(server_binding)
+
     for hn in hostname:
        # create client socket and connect to RS
        try:
@@ -38,17 +34,18 @@ def client(host, rsport, tsport):
            print(data_from_rs)
        #if(status[2] == 'NS'):
        cs.close()
-       
+
        # Create a client socket to connect to TS
        if(status[2] =='NS'):
            print("here")
+           tsHost = status[0];
            try:
                cs = mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
                print("Client socket1 created")
            except mysoc.error as err:
                print('{} \n'.format("socket open error ",err))
            #connecting to loca ts for now
-           sa_sameas_myaddr = mysoc.gethostbyname(host)
+           sa_sameas_myaddr = mysoc.gethostbyname(tsHost)
            server_binding = (sa_sameas_myaddr, tsport)
            cs.connect(server_binding)
            print("the hn sending is: ", hn)
@@ -56,6 +53,45 @@ def client(host, rsport, tsport):
            data_from_ts = cs.recv(100).decode('utf-8')  #data received from ts server
            print("data from ts is:" , data_from_ts)
            cs.close()
+
+       # signal servers to close
+       # close rs
+    try:
+        cs=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
+         #cs1 = mysoc.socket(sysoc.AF_INET, mysoc.SOCK_STREAM)
+        print("[C]: Client socket created")
+    except mysoc.error as err:
+        print('{} \n'.format("socket open error ",err))
+        #cs1=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
+    print("the hostname is:" ,hn)
+    sa_sameas_myaddr = mysoc.gethostbyname(host)
+    server_binding = (sa_sameas_myaddr, rsport)
+    cs.connect(server_binding)
+    print ("Sending message: ", "END")
+    # convert to lowercase
+    message = "END"
+    cs.send(message.encode('utf-8'))
+    cs.close
+    #close ts 
+    if(tsHost):
+        try:
+             cs=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
+             #cs1 = mysoc.socket(sysoc.AF_INET, mysoc.SOCK_STREAM)
+             print("[C]: Client socket created")
+        except mysoc.error as err:
+             print('{} \n'.format("socket open error ",err))
+             #cs1=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
+        print("the hostname is:" ,hn)
+        sa_sameas_myaddr = mysoc.gethostbyname(tsHost)
+        server_binding = (sa_sameas_myaddr, tsport)
+        cs.connect(server_binding)
+        print ("Sending message: ", "END")
+        # convert to lowercase
+        message = "END"
+        cs.send(message.encode('utf-8'))
+        cs.close
+
+
     exit()
 
 print 'Number of arguments:', len(sys.argv), 'arguments.'
