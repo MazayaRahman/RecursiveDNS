@@ -4,11 +4,10 @@ import threading
 
 #client task
 def client(host, rsport, tsport):
-    print 'host: ', host, 'rsport: ', rsport, 'tsport: ', tsport
 
     rsport = int(rsport)
     tsport = int(tsport)
-    
+
     file_write = open("RESOLVED.txt", "w")
     for hn in hostname:
        # create client socket and connect to RS
@@ -20,11 +19,10 @@ def client(host, rsport, tsport):
        except mysoc.error as err:
            print('{} \n'.format("socket open error ",err))
            #cs1=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
-       print("the hostname is:" ,hn)
        sa_sameas_myaddr = mysoc.gethostbyname(host)
        server_binding = (sa_sameas_myaddr, rsport)
        cs.connect(server_binding)
-       print ("the hn sending is: ", hn)
+       print ("Sending Hostname: ", hn)
        # convert to lowercase
        hn = hn.lower()
        cs.send(hn.encode('utf-8'))
@@ -35,7 +33,6 @@ def client(host, rsport, tsport):
        #print(status[2])
        if(status[2] == 'A'):
            file_write.write(data_from_rs.decode('utf-8')+ '\n')
-           print(data_from_rs)
        #if(status[2] == 'NS'):
        cs.close()
 
@@ -52,27 +49,15 @@ def client(host, rsport, tsport):
            sa_sameas_myaddr = mysoc.gethostbyname(tsHost)
            server_binding = (sa_sameas_myaddr, tsport)
            cs.connect(server_binding)
-           print("the hn sending is: ", hn)
+           print("Sending Hostname: ", hn)
            cs.send(hn.encode('utf-8'))
            data_from_ts = cs.recv(200).decode('utf-8')  #data received from ts server
            file_write.write(data_from_ts.decode('utf-8') + '\n') #putting data from ts into resolved.txt
            print("data from ts is:" , data_from_ts)
            print("\n")
            cs.close()
-    
-       #putting the results in RESOLVED.txt
-       #strans = ''
-       #with open('RESOLVED.txt', 'w') as f:
-        #   for i in status:
-         #      if( i == 'A'):
-          #         strans = data_from_rs
-           #    if(i == 'NS'):
-            #       strans = data_from_ts
-          # strans = strans + '\n'
-          # print("CHECKING STRANS!!" , strans)
-          # f.write(strans)
-           #print("CHECKING STRANS!!" , strans)
-           #strans = ' '
+
+
        # signal servers to close
        # close rs
     try:
@@ -82,7 +67,6 @@ def client(host, rsport, tsport):
     except mysoc.error as err:
         print('{} \n'.format("socket open error ",err))
         #cs1=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
-    print("the hostname is:" ,hn)
     sa_sameas_myaddr = mysoc.gethostbyname(host)
     server_binding = (sa_sameas_myaddr, rsport)
     cs.connect(server_binding)
@@ -91,7 +75,7 @@ def client(host, rsport, tsport):
     message = "END"
     cs.send(message.encode('utf-8'))
     cs.close
-    #close ts 
+    #close ts
     if(tsHost):
         try:
              cs=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
@@ -100,7 +84,6 @@ def client(host, rsport, tsport):
         except mysoc.error as err:
              print('{} \n'.format("socket open error ",err))
              #cs1=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
-        print("the hostname is:" ,hn)
         sa_sameas_myaddr = mysoc.gethostbyname(tsHost)
         server_binding = (sa_sameas_myaddr, tsport)
         cs.connect(server_binding)
@@ -125,9 +108,6 @@ with open("PROJI-HNS.txt", 'r') as f:
         #print(lines)
         hostname.append(lines.strip())
 
-    for i in hostname:
-        print("The  hostname is:", i)
-#print("The second hostname is:", hostname[1])
 
 t2 = threading.Thread(name='client', target=client, args=(host,rsport,tsport,))
 t2.start()

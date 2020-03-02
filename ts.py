@@ -7,10 +7,7 @@ def lookup(target):
     for entry in dns_table:
         hn = entry[0].lower()
         if hn == target:
-            print "found!"
-            print entry
             entry = ' '.join(entry)
-            #print entry
             return entry
     # Did not find hostname, find TS gethostname
     error = target + " - Error:HOST NOT FOUND"
@@ -42,11 +39,11 @@ def server(port):
         csockid, addr = ss.accept()
         print ("[S]: Got a connection request from a client at", addr)
         hostname = csockid.recv(200).decode('utf-8')
-        #print hostname
+
         if not hostname:
             break
         print("[S]: Data received from client::  ",hostname.decode('utf-8'))
-        print hostname
+
         if(hostname == "END"):
             ss.close
             exit()

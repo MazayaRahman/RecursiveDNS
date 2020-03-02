@@ -7,17 +7,12 @@ def lookup(target):
     for entry in dns_table:
         hn = entry[0].lower()
         if hn == target:
-            print "found!"
-            print entry
             entry = ' '.join(entry)
-            #print entry
             return entry
     # Did not find hostname, find TS gethostname
     for entry in dns_table:
         if entry[2] == 'NS':
-            print entry
             entry = ' '.join(entry)
-            #print entry
             return entry
 
 # server task
