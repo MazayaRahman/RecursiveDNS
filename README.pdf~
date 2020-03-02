@@ -1,0 +1,4 @@
+Siddhi Kasera(smk339) & Mazaya Rahman
+
+1. Implementation of Recursive Client Functionality
+Created two servers ts and rs and one client. The client takes in the hostname on which the servers are running. The client reads a file that consists of the hostname and first sends it to the rs server. The rs server searches if it has that hostname in its DNS table. If yes sends 

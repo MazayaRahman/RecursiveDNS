@@ -41,7 +41,7 @@ def server(port):
         # accept client
         csockid, addr = ss.accept()
         print ("[S]: Got a connection request from a client at", addr)
-        hostname = csockid.recv(100).decode('utf-8')
+        hostname = csockid.recv(200).decode('utf-8')
         #print hostname
         if not hostname:
             break

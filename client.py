@@ -8,13 +8,15 @@ def client(host, rsport, tsport):
 
     rsport = int(rsport)
     tsport = int(tsport)
-
+    
+    file_write = open("RESOLVED.txt", "w")
     for hn in hostname:
        # create client socket and connect to RS
        try:
            cs=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
            #cs1 = mysoc.socket(sysoc.AF_INET, mysoc.SOCK_STREAM)
            print("[C]: Client socket created")
+           print("\n")
        except mysoc.error as err:
            print('{} \n'.format("socket open error ",err))
            #cs1=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
@@ -26,18 +28,20 @@ def client(host, rsport, tsport):
        # convert to lowercase
        hn = hn.lower()
        cs.send(hn.encode('utf-8'))
-       data_from_rs = cs.recv(100).decode('utf-8') #data received from rs server.
+       data_from_rs = cs.recv(200).decode('utf-8') #data received from rs server.
+       #file_write.write(data_from_rs.decode('utf-8')+ '\n') #putting data from rs into resolved.txt
        print("the data from rs is:", data_from_rs)
        status = data_from_rs.split(' ')
        #print(status[2])
        if(status[2] == 'A'):
+           file_write.write(data_from_rs.decode('utf-8')+ '\n')
            print(data_from_rs)
        #if(status[2] == 'NS'):
        cs.close()
 
        # Create a client socket to connect to TS
        if(status[2] =='NS'):
-           print("here")
+           #print("here")
            tsHost = status[0];
            try:
                cs = mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
@@ -50,10 +54,25 @@ def client(host, rsport, tsport):
            cs.connect(server_binding)
            print("the hn sending is: ", hn)
            cs.send(hn.encode('utf-8'))
-           data_from_ts = cs.recv(100).decode('utf-8')  #data received from ts server
+           data_from_ts = cs.recv(200).decode('utf-8')  #data received from ts server
+           file_write.write(data_from_ts.decode('utf-8') + '\n') #putting data from ts into resolved.txt
            print("data from ts is:" , data_from_ts)
+           print("\n")
            cs.close()
-
+    
+       #putting the results in RESOLVED.txt
+       #strans = ''
+       #with open('RESOLVED.txt', 'w') as f:
+        #   for i in status:
+         #      if( i == 'A'):
+          #         strans = data_from_rs
+           #    if(i == 'NS'):
+            #       strans = data_from_ts
+          # strans = strans + '\n'
+          # print("CHECKING STRANS!!" , strans)
+          # f.write(strans)
+           #print("CHECKING STRANS!!" , strans)
+           #strans = ' '
        # signal servers to close
        # close rs
     try:
